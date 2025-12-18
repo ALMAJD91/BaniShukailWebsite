@@ -125,7 +125,7 @@ for idx in range(max(len(item_codes), len(descriptions), len(quantities), len(un
     )
 
 messages.success(request, "Invoice saved.")
-            return redirect("invoices:list")
+    return redirect("invoices:list")
 
     return render(request, "invoice_create.html", {
         "title": "Create Invoice",
