@@ -1,0 +1,29 @@
+<aside class="sidebar">
+  <div class="logo">
+    <img src="{% static 'images/logo.png' %}" class="logo-img" alt="Logo" />
+    <div class="logo-text">
+      <div class="logo-title">Bani Shukail</div>
+      <div class="logo-subtitle">Management System</div>
+    </div>
+  </div>
+
+  <nav class="menu">
+    <div class="menu-title">Main Menu</div>
+    <a href="{% url 'core:dashboard' %}" class="menu-item {% if active == 'dashboard' %}active{% endif %}">Dashboard</a>
+    <a href="{% url 'assets:list' %}" class="menu-item {% if active == 'assets' %}active{% endif %}">Assets</a>
+    <a href="{% url 'invoices:list' %}" class="menu-item {% if active == 'invoices' %}active{% endif %}">Invoices</a>
+    <a href="{% url 'lpo:list' %}" class="menu-item {% if active == 'lpo' %}active{% endif %}">LPO / Quotations</a>
+    <a href="{% url 'warehouse:list' %}" class="menu-item {% if active == 'warehouse' %}active{% endif %}">Warehouse</a>
+    <a href="{% url 'employees:list' %}" class="menu-item {% if active == 'employees' %}active{% endif %}">Employees</a>
+
+    <div class="menu-title">Administration</div>
+    <a href="{% url 'core:reports' %}" class="menu-item {% if active == 'reports' %}active{% endif %}">Reports</a>
+    <a href="{% url 'accounts:users' %}" class="menu-item {% if active == 'users' %}active{% endif %}">Users &amp; permissions</a>
+    <a href="{% url 'core:settings' %}" class="menu-item {% if active == 'settings' %}active{% endif %}">System Settings</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="company-name">Bani Shukail Trading Co.</div>
+    <div class="small-text">© 2025 All rights reserved</div>
+  </div>
+</aside>

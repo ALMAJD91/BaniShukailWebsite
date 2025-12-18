@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="toolbar">
+                    <div class="toolbar-left">
+                        <div class="field-group">
+                            <label for="search-lpo">Search LPO</label>
+                            <input id="search-lpo" type="text" placeholder="Search by LPO No. or client" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="filter-client">Client</label>
+                            <select id="filter-client">
+                                <option value="">All clients</option>
+                                <option>Bahla Municipality</option>
+                                <option>Manah Municipality</option>
+                                <option>Adam Municipality</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="filter-date">Date</label>
+                            <input id="filter-date" type="date" />
+                        </div>
+                    </div>
+
+                    <div class="toolbar-right">
+                        <button class="btn-secondary">Export</button>
+                        <a href="{% url 'lpo:create' %}" class="btn-primary btn-link">+ Create LPO</a>
+                    </div>
+                </div>
+
+                <!-- ✅ wrap the list panel with an ID so print shows ONLY this -->
+                <div class="panel table-panel" id="lpoListPanel">
+                    <div class="panel-header">
+                        <div class="panel-title">LPO / Quotation List</div>
+                        <div class="panel-subtitle">All quotations submitted to clients</div>
+                    </div>
+
+                    <div class="panel-body table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>LPO No.</th>
+                                    <th>Client</th>
+                                    <th>Description</th>
+                                    <th>Amount (OMR)</th>
+                                    <th>Date</th>
+                                    <th class="no-print">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+{% for q in lpos %}
+<tr>
+  <td>{{ q.lpo_no }}</td>
+  <td>{{ q.customer.code }}</td>
+  <td>{{ q.customer.name }}</td>
+  <td>{{ q.total|floatformat:3 }}</td>
+  <td>{{ q.date|date:"d/m/Y" }}</td>
+  <td>
+    <a href="{% url 'lpo:print' lpo_id=q.id %}" class="btn-small">View</a>
+    <a href="{% url 'lpo:print' lpo_id=q.id %}" class="btn-small">Print</a>
+  </td>
+</tr>
+{% empty %}
+<tr><td colspan="6" class="small-text">No LPO / quotations yet.</td></tr>
+{% endfor %}
+</tbody>
+                        </table>
+
+                        <!-- ✅ print footer (shows only in print) -->
+                        <div id="print-footer" style="
+                            text-align:center;
+                            font-size:0.75rem;
+                            color:#6b7280;
+                            display:none;">
+                            Printed By: <span id="printedBy">-</span>
+                        </div>
+                    </div>
+                </div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="toolbar">
+                <div class="toolbar-left">
+                    <div class="field-group">
+                        <label for="search-invoice">Search invoices</label>
+                        <input id="search-invoice" type="text" placeholder="Invoice no. or municipality" />
+                    </div>
+
+                    <div class="field-group">
+                        <label for="filter-muni">Municipality (Client)</label>
+                        <select id="filter-muni">
+                            <option value="">All</option>
+                            <option value="Bahla">Bahla Municipality</option>
+                            <option value="Manah">Manah Municipality</option>
+                            <option value="Adam">Adam Municipality</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="filter-wilaya">Wilaya code</label>
+                        <select id="filter-wilaya">
+                            <option value="">All</option>
+                            <option value="Al Dakhiliyah">Al Dakhiliyah</option>
+                            <option value="Al Dhahirah">Al Dhahirah</option>
+                            <option value="Al Batinah">Al Batinah</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="filter-date">Invoice date</label>
+                        <input id="filter-date" type="date" />
+                    </div>
+                </div>
+
+                <div class="toolbar-right">
+                    <button class="btn-secondary">Export</button>
+                    <a href="{% url 'invoices:create' %}" class="btn-primary btn-link">+ Create Invoice</a>
+                </div>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="panel-header">
+                    <div class="panel-title">Invoice List</div>
+                    <div class="panel-subtitle">
+                        Key invoice details based on Bani Shukail tax invoice format
+                    </div>
+                </div>
+
+                <div class="panel-body table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Invoice No.</th>
+                            <th>Operation Order</th>
+                            <th>Customer No.</th>
+                            <th>Wilaya Code</th>
+                            <th>Client / Municipality</th>
+                            <th>Location</th>
+                            <th>Total (Incl. VAT)</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+{% for inv in invoices %}
+<tr>
+  <td>{{ inv.invoice_no }}</td>
+  <td>{{ inv.operation_order_no }}</td>
+  <td>{{ inv.customer.code }}</td>
+  <td>{{ inv.wilaya_code }}</td>
+  <td>{{ inv.customer.name }}</td>
+  <td>{{ inv.location_site|default:"---" }}</td>
+  <td>{{ inv.total|floatformat:3 }}</td>
+  <td>{{ inv.date|date:"d/m/Y" }}</td>
+  <td>
+    <a href="{% url 'invoices:print' invoice_id=inv.id %}" class="btn-small">View</a>
+    <a href="{% url 'invoices:print' invoice_id=inv.id %}" class="btn-small">Print</a>
+  </td>
+</tr>
+{% empty %}
+<tr><td colspan="9" class="small-text">No invoices yet.</td></tr>
+{% endfor %}
+</tbody>
+                    </table>
+                </div>
+
+            </div>
+{% endblock %}

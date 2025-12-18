@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Employees List -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Employees List</div>
+                    <div class="panel-subtitle">
+                        Basic information for each employee including nationality, join date, passport & labour card expiry.
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <!-- Filters & actions -->
+                    <div class="toolbar" style="margin-bottom: 0.75rem;">
+                        <div class="toolbar-left">
+                            <div class="field-group">
+                                <label for="search-emp">Search employees</label>
+                                <input id="search-emp" type="text" placeholder="Search by name or nationality" />
+                            </div>
+
+                            <div class="field-group">
+                                <label for="filter-nationality">Nationality</label>
+                                <select id="filter-nationality">
+                                    <option value="">All</option>
+                                    <option value="Omani">Omani</option>
+                                    <option value="Indian">Indian</option>
+                                    <option value="Bangladeshi">Bangladeshi</option>
+                                    <option value="Pakistani">Pakistani</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="toolbar-right">
+                            <button class="btn-secondary">Export</button>
+                            <button class="btn-primary" onclick="clearEmployeeForm()">+ Add Employee</button>
+                        </div>
+                    </div>
+
+                    <!-- Employees table -->
+                    <div class="table-wrapper">
+                        <table class="data-table" id="employees-table">
+                            <thead>
+                            <tr>
+                                <th>Employee Name</th>
+                                <th>Nationality</th>
+                                <th>Date Joined</th>
+                                <th>Passport Expiry</th>
+                                <th>Labour Card Expiry</th>
+                                <th>Monthly Salary (OMR)</th>
+                                <th>Notes</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+{% for e in employees %}
+<tr>
+  <td>{{ e.emp_no }}</td>
+  <td>{{ e.name }}</td>
+  <td>{{ e.job_title }}</td>
+  <td>{{ e.phone }}</td>
+  <td>{{ e.base_salary|floatformat:3 }}</td>
+</tr>
+{% empty %}
+<tr><td colspan="5" class="small-text">No employees yet.</td></tr>
+{% endfor %}
+</tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Add / Edit Employee Form -->
+            <div class="panel" style="margin-top: 1rem;">
+                <div class="panel-header">
+                    <div class="panel-title">Add / Edit Employee</div>
+                    <div class="panel-subtitle">
+                        Enter or update employee information manually, including expiry dates and salary.
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-grid-3">
+                        <div class="field-group">
+                            <label for="emp-name">Employee Name</label>
+                            <input id="emp-name" type="text" placeholder="Employee full name" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="emp-nationality">Nationality</label>
+                            <input id="emp-nationality" type="text" placeholder="e.g. Omani / Indian" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="emp-join-date">Date Joined</label>
+                            <input id="emp-join-date" type="date" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="emp-passport-expiry">Passport Expiry Date</label>
+                            <input id="emp-passport-expiry" type="date" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="emp-labour-expiry">Labour Card Expiry Date</label>
+                            <input id="emp-labour-expiry" type="date" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="emp-salary">Monthly Salary (OMR)</label>
+                            <input id="emp-salary" type="number" step="0.001" placeholder="e.g. 350.000" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="emp-notes">Notes</label>
+                            <input id="emp-notes" type="text" placeholder="Any notes about this employee" />
+                        </div>
+
+                        <div class="field-group">
+                            <label>&nbsp;</label>
+                            <button class="btn-primary full-width" onclick="saveEmployee()">Save / Update</button>
+                        </div>
+                    </div>
+
+                    <!-- Hidden field to know which row is being edited -->
+                    <input type="hidden" id="editing-row-index" value="" />
+                </div>
+            </div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div class="panel-title">{{ title }}</div>
+        <div class="panel-subtitle">Fill item details then save.</div>
+    </div>
+    <div class="panel-body">
+        <form method="post">{% csrf_token %}
+            <div class="form-grid">
+                <div class="field-group">
+                    <label>Code</label>
+                    {{ form.code }}
+                </div>
+                <div class="field-group">
+                    <label>Name</label>
+                    {{ form.name }}
+                </div>
+                <div class="field-group" style="grid-column: 1 / -1;">
+                    <label>Description</label>
+                    {{ form.description }}
+                </div>
+                <div class="field-group">
+                    <label>Unit</label>
+                    {{ form.unit_label }}
+                </div>
+                <div class="field-group">
+                    <label>Price (OMR)</label>
+                    {{ form.price }}
+                </div>
+                <div class="field-group">
+                    <label>Stock Qty</label>
+                    {{ form.stock_qty }}
+                </div>
+                <div class="field-group">
+                    <label>Type</label>
+                    {{ form.item_type }}
+                </div>
+            </div>
+
+            <div class="toolbar" style="margin-top: 1rem;">
+                <div class="toolbar-left">
+                    <a class="btn-secondary" href="{% url 'warehouse:list' %}">Back</a>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn-primary" type="submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

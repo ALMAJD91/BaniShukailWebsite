@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Stats Cards -->
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-title">Total Assets</div>
+                    <div class="card-value">128</div>
+                    <div class="card-note">Updated today</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Pending Invoices</div>
+                    <div class="card-value">24</div>
+                    <div class="card-note">Awaiting payment</div>
+
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Warehouse Items</div>
+                    <div class="card-value">3,452</div>
+                    <div class="card-note">Across all locations</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Active Employees</div>
+                    <div class="card-value">57</div>
+                    <div class="card-note">Including field staff</div>
+                </div>
+            </div>
+
+            <!-- Panels -->
+            <div class="two-column">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Recent Activity</div>
+                        <div class="panel-subtitle">Last updates in the system</div>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="activity-list">
+                            <li>
+                                <span class="dot"></span>
+                                New invoice #INV-2025-041 created for Al Noor Contracting.
+                                <span class="time">5 min ago</span>
+                            </li>
+                            <li>
+                                <span class="dot"></span>
+                                Asset "Forklift #3" assigned to Warehouse Manager.
+                                <span class="time">18 min ago</span>
+                            </li>
+                            <li>
+                                <span class="dot"></span>
+                                Employee record updated: "Mohammed Abdullah".
+                                <span class="time">1 hour ago</span>
+                            </li>
+                            <li>
+                                <span class="dot"></span>
+                                Low stock alert for item "LED Street Light 60W".
+                                <span class="time">2 hours ago</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Quick Summary</div>
+                        <div class="panel-subtitle">Today’s key numbers</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="summary-item">
+                            <div>
+                                <div class="summary-label">Invoices generated today</div>
+                                <div class="summary-value">12</div>
+                            </div>
+                        </div>
+
+                        <div class="summary-item">
+                            <div>
+                                <div class="summary-label">Assets under maintenance</div>
+                                <div class="summary-value">4</div>
+                            </div>
+                        </div>
+
+                        <div class="summary-item">
+                            <div>
+                                <div class="summary-label">Items below minimum stock</div>
+                                <div class="summary-value">9</div>
+                            </div>
+                        </div>
+
+                        <div class="summary-item">
+                            <div>
+                                <div class="summary-label">Employees on leave today</div>
+                                <div class="summary-value">3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

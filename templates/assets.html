@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Filters + Actions -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <div class="field-group">
+                        <label for="search-asset">Search assets</label>
+                        <input id="search-asset" type="text" placeholder="Search by name, code, or location" />
+                    </div>
+                    <div class="field-group">
+                        <label for="filter-status">Status</label>
+                        <select id="filter-status">
+                            <option value="">All</option>
+                            <option value="In use">In use</option>
+                            <option value="Under maintenance">Under maintenance</option>
+                            <option value="Retired">Retired</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label for="filter-location">Location</label>
+                        <select id="filter-location">
+                            <option value="">All</option>
+                            <option value="Warehouse 1">Warehouse 1</option>
+                            <option value="Warehouse 2">Warehouse 2</option>
+                            <option value="Field">Field</option>
+                            <option value="Head Office">Head Office</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="toolbar-right">
+                    <!-- ✅ Export يطبع فقط Asset List -->
+                    <button class="btn-secondary" onclick="exportAssets()">Export</button>
+                    <!-- ينزل للفورم أسفل الصفحة -->
+                    <button class="btn-primary" onclick="scrollToAddAsset()">+ Add asset</button>
+                </div>
+            </div>
+
+            <!-- ✅ حطينا class فقط: assets-print-area (بدون تغيير تصميم) -->
+            <div class="panel table-panel assets-print-area">
+                <div class="panel-header">
+                    <div class="panel-title">Asset List</div>
+                    <div class="panel-subtitle">All registered company assets</div>
+                </div>
+                <div class="panel-body table-wrapper">
+                    <table class="data-table" id="assets-table">
+                        <thead>
+                        <tr>
+                            <th>Asset Code</th>
+                            <th>Asset Name</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Assigned To</th>
+                            <th>Status</th>
+                            <th>Purchase Date</th>
+                            <th class="no-print">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+{% for a in assets %}
+<tr>
+  <td>{{ a.code }}</td>
+  <td>{{ a.name }}</td>
+  <td>{{ a.location }}</td>
+  <td><span class="badge">{{ a.get_status_display }}</span></td>
+  <td>{{ a.notes|default:"" }}</td>
+</tr>
+{% empty %}
+<tr><td colspan="5" class="small-text">No assets yet.</td></tr>
+{% endfor %}
+</tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add New Asset Form (same page) -->
+            <div class="panel no-print" id="add-asset-panel" style="margin-top: 1.5rem;">
+                <div class="panel-header">
+                    <div class="panel-title">Add New Asset</div>
+                    <div class="panel-subtitle">Add a new asset directly to the list below</div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-grid-3">
+                        <div class="field-group">
+                            <label for="asset-code">Asset Code</label>
+                            <input id="asset-code" type="text" placeholder="e.g. AST-0006" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="asset-name">Asset Name</label>
+                            <input id="asset-name" type="text" placeholder="e.g. Toyota Hilux #7" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="asset-category">Category</label>
+                            <input id="asset-category" type="text" placeholder="e.g. Vehicle / Tool / IT" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="asset-location">Location</label>
+                            <input id="asset-location" type="text" placeholder="e.g. Warehouse 1 / Field" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="asset-assigned">Assigned To</label>
+                            <input id="asset-assigned" type="text" placeholder="e.g. Site Supervisor" />
+                        </div>
+
+                        <div class="field-group">
+                            <label for="asset-status">Status</label>
+                            <select id="asset-status">
+                                <option value="In use">In use</option>
+                                <option value="Under maintenance">Under maintenance</option>
+                                <option value="Retired">Retired</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="asset-date">Purchase Date</label>
+                            <input id="asset-date" type="date" />
+                        </div>
+
+                        <div class="field-group">
+                            <label>&nbsp;</label>
+                            <button class="btn-primary full-width" type="button" onclick="addAsset()">+ Add to Asset List</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Print footer (visible only in print) -->
+            <div id="print-footer" style="
+                text-align: center;
+                font-size: 0.75rem;
+                color: #6b7280;
+                margin-top: 2rem;
+                display: none;
+            ">
+                طبعت بواسطة: <span id="printedBy"></span>
+            </div>
+{% endblock %}

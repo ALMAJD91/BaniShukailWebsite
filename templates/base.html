@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ title }} - Bani Shukail</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'style.css' %}" />
+  {% block head %}{% endblock %}
+</head>
+<body>
+<div class="layout">
+  {% include 'includes/sidebar.html' %}
+  <main class="main">
+    {% include 'includes/topbar.html' %}
+    <section class="content">
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+</div>
+{% block scripts %}{% endblock %}
+</body>
+</html>

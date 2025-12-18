@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Company Information</div>
+                    
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="form-grid-3">
+                            <div class="field-group">
+                                <label>Company Name</label>
+                                <input type="text" value="Bani Shukail Trading Co." />
+                            </div>
+
+                            <div class="field-group">
+                                <label>Currency</label>
+                                <select>
+                                    <option selected>OMR</option>
+                                    <option>USD</option>
+                                    <option>EUR</option>
+                                </select>
+                            </div>
+
+                            <div class="field-group">
+                                <label>VAT (%)</label>
+                                <input type="number" value="5" />
+                            </div>
+                        </div>
+
+                        <div class="form-grid-3" style="margin-top: 12px;">
+                            <div class="field-group">
+                                <label>Phone</label>
+                                <input type="text" value="+968 25438373" />
+                            </div>
+
+                            <div class="field-group">
+                                <label>Email</label>
+                                <input type="text" value="Banishukail255@Gmail.com" />
+                            </div>
+
+                            <div class="field-group">
+                                <label>Invoice Prefix</label>
+                                <input type="text" value="BS-INV-" />
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 14px;" class="toolbar-right">
+                            <button class="btn-secondary" onclick="alert('Sorry, Only Admin can change info.')">Reset</button>
+                            <button class="btn-primary"
+                                onclick="alert('Sorry, Only Admin can change info')">Save</button>
+                        </div>
+
+                        <div style="margin-top: 12px; color:#6b7280; font-size: .85rem;">
+                            Note: This page is a prototype. Settings will be stored in the database once backend
+                            integration is completed.
+                        </div>
+
+                    </div>
+                </div>
+{% endblock %}
