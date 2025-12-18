@@ -102,7 +102,7 @@ if not DEBUG:
             User.objects.create_superuser(
                 username="admin",
                 email="admin@example.com",
-                password="1234"
+                password="Bani@2025Admin"
             )
     except Exception:
         pass
