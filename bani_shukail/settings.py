@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # local apps
-    "accounts",
+    "accounts.apps.AccountsConfig",
     "core",
     "assets",
     "warehouse",
@@ -93,16 +93,3 @@ LOGIN_REDIRECT_URL = "core:dashboard"
 LOGOUT_REDIRECT_URL = "accounts:login"
 
 
-# TEMP: auto create superuser (REMOVE AFTER FIRST LOGIN)
-if not DEBUG:
-    try:
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-        if not User.objects.filter(username="admin").exists():
-            User.objects.create_superuser(
-                username="admin",
-                email="admin@example.com",
-                password="Bani@2025Admin"
-            )
-    except Exception:
-        pass
