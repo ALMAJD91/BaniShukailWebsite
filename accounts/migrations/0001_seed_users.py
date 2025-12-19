@@ -51,9 +51,10 @@ def unseed_users(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
+    # ✅ نعتمد على auth فقط (موجود دائمًا) لضمان إنشاء الجداول قبل تشغيلنا
     dependencies = [
-        ("accounts", "0001_initial"),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("contenttypes", "0002_remove_content_type_name"),
     ]
 
     operations = [
