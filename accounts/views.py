@@ -1,23 +1,18 @@
-from django.contrib.auth import views as auth_views
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
-from .models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
-class LoginView(auth_views.LoginView):
-    template_name = "login.html"
+def login_view(request):
+    if request.method == "POST":
+        username = (request.POST.get("username") or "").strip()
+        password = (request.POST.get("password") or "").strip()
 
-class LogoutView(auth_views.LogoutView):
-    next_page = "accounts:login"
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("core:dashboard")
+        else:
+            messages.error(request, "Invalid username or password.")
 
-def is_admin(user: User) -> bool:
-    return user.is_authenticated and getattr(user, "role", "") == User.Role.ADMIN
-
-@login_required
-@user_passes_test(is_admin)
-def users_view(request):
-    return render(request, "users.html", {
-        "title": "Users & permissions",
-        "subtitle": "Manage user accounts",
-        "active": "users",
-        "users": User.objects.order_by("username"),
-    })
+    return render(request, "login.html")
