@@ -2,7 +2,7 @@ from django.db import migrations
 
 
 def seed_users(apps, schema_editor):
-    User = apps.get_model("auth", "User")
+    User = apps.get_model("accounts", "User")
 
     # ===== Super Admin =====
     admin, _ = User.objects.get_or_create(
@@ -38,7 +38,7 @@ def seed_users(apps, schema_editor):
 
 
 def unseed_users(apps, schema_editor):
-    User = apps.get_model("auth", "User")
+    User = apps.get_model("accounts", "User")
     usernames = [
         "admin",
         "Ali9933",
@@ -53,10 +53,9 @@ def unseed_users(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("auth", "0012_alter_user_first_name_max_length"),
+        ("accounts", "0001_initial"),
     ]
 
     operations = [
         migrations.RunPython(seed_users, reverse_code=unseed_users),
     ]
-
