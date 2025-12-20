@@ -174,25 +174,21 @@
 </div>
 
 <script>
-     const username = document.getElementById("username").value.trim();
-            const password = document.getElementById("password").value.trim();
+    const form = document.getElementById("loginForm");
+    const errorBox = document.getElementById("clientError");
 
+    form.addEventListener("submit", function (e) {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        errorBox.style.display = "none";
+        errorBox.textContent = "";
+
+        if (!username || !password) {
+            e.preventDefault();
+            errorBox.textContent = "Please enter both username and password.";
             errorBox.style.display = "block";
-
-            if (!username || !password) {
-                errorBox.textContent = "Invalid value. Please enter username and password.";
-                return;
-            }
-
-            if (username !== VALID_USERNAME) {
-                errorBox.textContent = "Invalid username.";
-                return;
-            }
-
-            if (password !== VALID_PASSWORD) {
-                errorBox.textContent = "Your password is not correct.";
-                return;
-            }
+        }
     });
 </script>
 
