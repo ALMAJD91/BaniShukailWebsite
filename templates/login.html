@@ -168,5 +168,42 @@
 
     </div>
 </div>
+
+    <script>
+       
+        
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            errorBox.style.display = "block";
+
+            if (!username || !password) {
+                errorBox.textContent = "Invalid value. Please enter username and password.";
+                return;
+            }
+
+            if (username !== VALID_USERNAME) {
+                errorBox.textContent = "Invalid username.";
+                return;
+            }
+
+            if (password !== VALID_PASSWORD) {
+                errorBox.textContent = "Your password is not correct.";
+                return;
+            }
+
+            // نجاح تسجيل الدخول
+            window.location.href = "index.html";
+        });
+    </script>
+
+
+
+
+    
 </body>
 </html>
