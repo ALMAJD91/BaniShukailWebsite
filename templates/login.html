@@ -133,6 +133,7 @@
                 <span style="color: rgb(108, 3, 81);">Bani Shukail System</span>
             </h1>
 
+            <!-- Django messages -->
             {% if messages %}
                 {% for message in messages %}
                     <div class="auth-error">{{ message }}</div>
@@ -143,18 +144,21 @@
         </div>
 
         <div class="auth-card-body">
-            <form method="post" action="{% url 'accounts:login' %}">
+            <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
                 {% csrf_token %}
 
                 <div class="auth-field">
                     <label>Username</label>
-                    <input type="text" name="username" required>
+                    <input type="text" name="username" id="username" required>
                 </div>
 
                 <div class="auth-field">
                     <label>Password</label>
-                    <input type="password" name="password" required>
+                    <input type="password" name="password" id="password" required>
                 </div>
+
+                <!-- Client-side error -->
+                <div id="clientError" class="auth-error" style="display:none;"></div>
 
                 <div class="auth-actions">
                     <button type="submit" class="auth-btn">Login</button>
@@ -168,10 +172,7 @@
 
     </div>
 </div>
-       
-       
 
-     
 <script>
     const form = document.getElementById("loginForm");
     const errorBox = document.getElementById("clientError");
@@ -191,7 +192,5 @@
     });
 </script>
 
-
-    
 </body>
 </html>
