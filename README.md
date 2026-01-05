@@ -2,8 +2,17 @@
 
 This project converts your HTML/CSS frontend into a Django (server-side templates) web application.
 
-## Quick start (Local)
 
+## Clone Repository
+
+open terminal and run the following commands:
+```bash
+cd Desktop
+git clone https://github.com/abdulmalik123456/BaniShukailWebsite.git
+cd BaniShukailWebsite
+```
+
+## Quick start (Local)
 ```bash
 python -m venv .venv
 # Windows: .venv\Scripts\activate
