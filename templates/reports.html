@@ -1,99 +1,76 @@
 {% extends 'base.html' %}
 {% block content %}
 <!-- Cards summary -->
-                <div class="cards-grid">
-                    <div class="card">
-                        <div class="card-title">Invoices</div>
-                        <div class="card-value">Monthly Report</div>
-                        <div class="card-note">Total invoices, revenue, outstanding</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-title">Assets</div>
-                        <div class="card-value">Asset Summary</div>
-                        <div class="card-note">Assets list, maintenance status</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-title">Warehouse</div>
-                        <div class="card-value">Stock Report</div>
-                        <div class="card-note">In/out stock & low items</div>
-                    </div>
-                    <div class="card">
-                        <div class="card-title">Employees</div>
-                        <div class="card-value">HR Report</div>
-                        <div class="card-note">Attendance, overtime, advances</div>
-                    </div>
-                </div>
+<div class="cards-grid">
+    <div class="card">
+        <div class="card-title">Invoices</div>
+        <div class="card-value">Monthly Report</div>
+        <div class="card-note">Total invoices, revenue, outstanding</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Assets</div>
+        <div class="card-value">Asset Summary</div>
+        <div class="card-note">Assets list, maintenance status</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Warehouse</div>
+        <div class="card-value">Stock Report</div>
+        <div class="card-note">In/out stock & low items</div>
+    </div>
+    <div class="card">
+        <div class="card-title">Employees</div>
+        <div class="card-value">HR Report</div>
+        <div class="card-note">Attendance, overtime, advances</div>
+    </div>
+</div>
 
-                <!-- Report table -->
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title">Available Reports</div>
-                        
-                    </div>
+<!-- Report table -->
+<div class="panel">
+    <div class="panel-header">
+        <div class="panel-title">Available Reports</div>
 
-                    <div class="panel-body table-wrapper">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Report Name</th>
-                                    <th>Category</th>
-                                    <th>Frequency</th>
-                                    <th>Status</th>
-                                    <th class="no-print">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Invoice Summary</td>
-                                    <td>Sales</td>
-                                    <td>Monthly</td>
-                                    <td><span class="badge badge-green">Ready</span></td>
-                                    <td class="no-print">
-                                        <button class="btn-small"
-                                            onclick="alert('Demo: Generate PDF (Backend Required)')">Generate</button>
-                                        <button class="btn-small" onclick="window.print()">Print</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Outstanding Invoices</td>
-                                    <td>Sales</td>
-                                    <td>Weekly</td>
-                                    <td><span class="badge badge-yellow">Pending</span></td>
-                                    <td class="no-print">
-                                        <button class="btn-small"
-                                            onclick="alert('Demo: Generate PDF (Backend Required)')">Generate</button>
-                                        <button class="btn-small" onclick="window.print()">Print</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Warehouse Stock Levels</td>
-                                    <td>Warehouse</td>
-                                    <td>Monthly</td>
-                                    <td><span class="badge badge-green">Ready</span></td>
-                                    <td class="no-print">
-                                        <button class="btn-small"
-                                            onclick="alert('Demo: Export Excel (Backend Required)')">Export</button>
-                                        <button class="btn-small" onclick="window.print()">Print</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Employee Overtime & Advances</td>
-                                    <td>HR</td>
-                                    <td>Monthly</td>
-                                    <td><span class="badge badge-gray">Draft</span></td>
-                                    <td class="no-print">
-                                        <button class="btn-small"
-                                            onclick="alert('Demo: Calculate (Backend Required)')">Calculate</button>
-                                        <button class="btn-small" onclick="window.print()">Print</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+    </div>
 
-                        <div style="margin-top: 12px; color:#6b7280; font-size: .85rem;">
-                            Note: This page is a prototype to demonstrate reporting modules. Full functionality will be
-                            implemented with backend integration.
-                        </div>
-                    </div>
-                </div>
+    <div class="panel-body table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Item Name</th>
+                    <th>Unit</th>
+                    <th>Price (OMR)</th>
+                    <th>Stock Qty</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.code }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.unit_label }}</td>
+                    <td>{{ item.price }}</td>
+                    <td style="font-weight: bold; {% if item.stock_qty < 10 %}color: #dc2626;{% endif %}">{{
+                        item.stock_qty }}</td>
+                    <td>
+                        {% if item.stock_qty < 10 %} <span class="badge"
+                            style="background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;">
+                            ⚠️ Low Stock Alert
+                            </span>
+                            {% else %}
+                            <span class="badge badge-green">In Stock</span>
+                            {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">No items found in warehouse.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
 {% endblock %}

@@ -9,12 +9,16 @@ def dashboard(request):
         "active": "dashboard",
     })
 
+from warehouse.models import WarehouseItem
+
 @login_required
 def reports(request):
+    items = WarehouseItem.objects.all().order_by('name')
     return render(request, "reports.html", {
         "title": "Reports",
-        "subtitle": "Generate reports",
+        "subtitle": "Warehouse Stock Report",
         "active": "reports",
+        "items": items,
     })
 
 @login_required

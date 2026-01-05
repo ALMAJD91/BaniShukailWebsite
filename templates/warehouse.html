@@ -43,7 +43,8 @@
                         <td>{{ it.name }}</td>
                         <td>{{ it.unit_label }}</td>
                         <td>{{ it.price }}</td>
-                        <td>{{ it.stock_qty }}</td>
+                        <td style="font-weight: bold; {% if it.stock_qty < 10 %}color: #dc2626;{% endif %}">{{
+                            it.stock_qty }}</td>
                         <td>{{ it.get_item_type_display }}</td>
                         {% if user.is_admin %}
                         <td>
@@ -53,7 +54,9 @@
                         {% endif %}
                     </tr>
                     {% empty %}
-                    <tr><td colspan="7">No items found.</td></tr>
+                    <tr>
+                        <td colspan="7">No items found.</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -68,13 +71,13 @@
 </div>
 
 <script>
-function filterItems() {
-    const q = (document.getElementById("search-items").value || "").toLowerCase();
-    const rows = document.querySelectorAll("#warehouseItemsTable tbody tr");
-    rows.forEach(r => {
-        const txt = (r.innerText || "").toLowerCase();
-        r.style.display = txt.includes(q) ? "" : "none";
-    });
-}
+    function filterItems() {
+        const q = (document.getElementById("search-items").value || "").toLowerCase();
+        const rows = document.querySelectorAll("#warehouseItemsTable tbody tr");
+        rows.forEach(r => {
+            const txt = (r.innerText || "").toLowerCase();
+            r.style.display = txt.includes(q) ? "" : "none";
+        });
+    }
 </script>
 {% endblock %}
