@@ -10,3 +10,6 @@ class User(AbstractUser):
 
     def is_admin(self) -> bool:
         return self.role == self.Role.ADMIN
+
+    def __str__(self):
+        return self.username
