@@ -43,8 +43,7 @@
                         <td>{{ it.name }}</td>
                         <td>{{ it.unit_label }}</td>
                         <td>{{ it.price }}</td>
-                        <td style="font-weight: bold; {% if it.stock_qty < 10 %}color: #dc2626;{% endif %}">{{
-                            it.stock_qty }}</td>
+                        <td style="font-weight: bold; {% if it.stock_qty < 10 %}color: #dc2626;{% endif %}">{{ it.stock_qty }}</td>
                         <td>{{ it.get_item_type_display }}</td>
                         {% if user.is_admin %}
                         <td>
