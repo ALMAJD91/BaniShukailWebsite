@@ -49,8 +49,7 @@
                     <td>{{ item.name }}</td>
                     <td>{{ item.unit_label }}</td>
                     <td>{{ item.price }}</td>
-                    <td style="font-weight: bold; {% if item.stock_qty < 10 %}color: #dc2626;{% endif %}">{{
-                        item.stock_qty|floatformat }}</td>
+                    <td style="font-weight: bold; {% if item.stock_qty < 10 %}color: #dc2626;{% endif %}">{{ item.stock_qty|floatformat }}</td>
                     <td>
                         {% if item.stock_qty < 10 %} <span class="badge"
                             style="background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;">
