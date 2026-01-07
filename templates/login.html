@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Login | Bani Shukail System</title>
@@ -109,6 +110,18 @@
             text-align: center;
         }
 
+        .input-error {
+            border-color: #ef4444 !important;
+        }
+
+        .field-error {
+            color: #ef4444;
+            /* Red-500 */
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
+        }
+
         .auth-footer {
             padding: 14px;
             text-align: center;
@@ -120,77 +133,108 @@
 </head>
 
 <body>
-<div class="auth-page">
-    <div class="auth-card">
+    <div class="auth-page">
+        <div class="auth-card">
 
-        <div class="auth-card-header">
-            <div class="auth-logo">
-                <img src="{% static 'images/logo.png' %}" alt="Logo">
+            <div class="auth-card-header">
+                <div class="auth-logo">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo">
+                </div>
+
+                <h1 class="auth-title">
+                    Welcome to <br>
+                    <span style="color: rgb(108, 3, 81);">Bani Shukail System</span>
+                </h1>
+
+                <!-- Django messages -->
+                {% if messages %}
+                {% for message in messages %}
+                <div class="auth-error">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+
+                <p class="auth-subtitle">Sign in to continue</p>
             </div>
 
-            <h1 class="auth-title">
-                Welcome to <br>
-                <span style="color: rgb(108, 3, 81);">Bani Shukail System</span>
-            </h1>
+            <div class="auth-card-body">
+                <form id="loginForm" method="post" action="{% url 'accounts:login' %}" novalidate>
+                    {% csrf_token %}
 
-            <!-- Django messages -->
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="auth-error">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
+                    <div class="auth-field">
+                        <label>Username</label>
+                        <input type="text" name="username" id="username" required>
+                        <div class="field-error" id="usernameError">Username is required</div>
+                    </div>
 
-            <p class="auth-subtitle">Sign in to continue</p>
+                    <div class="auth-field">
+                        <label>Password</label>
+                        <input type="password" name="password" id="password" required>
+                        <div class="field-error" id="passwordError">Password is required</div>
+                    </div>
+
+                    <!-- Client-side error -->
+                    <div id="clientError" class="auth-error" style="display:none;"></div>
+
+                    <div class="auth-actions">
+                        <button type="submit" class="auth-btn">Login</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="auth-footer">
+                © 2025 Bani Shukail Trading Co.
+            </div>
+
         </div>
-
-        <div class="auth-card-body">
-            <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
-                {% csrf_token %}
-
-                <div class="auth-field">
-                    <label>Username</label>
-                    <input type="text" name="username" id="username" required>
-                </div>
-
-                <div class="auth-field">
-                    <label>Password</label>
-                    <input type="password" name="password" id="password" required>
-                </div>
-
-                <!-- Client-side error -->
-                <div id="clientError" class="auth-error" style="display:none;"></div>
-
-                <div class="auth-actions">
-                    <button type="submit" class="auth-btn">Login</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="auth-footer">
-            © 2025 Bani Shukail Trading Co.
-        </div>
-
     </div>
-</div>
 
-<script>
-    const form = document.getElementById("loginForm");
-    const errorBox = document.getElementById("clientError");
+    <script>
+        const form = document.getElementById("loginForm");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const clientError = document.getElementById("clientError");
 
-    form.addEventListener("submit", function (e) {
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value.trim();
-
-        errorBox.style.display = "none";
-        errorBox.textContent = "";
-
-        if (!username || !password) {
-            e.preventDefault();
-            errorBox.textContent = "Please enter both username and password.";
-            errorBox.style.display = "block";
+        // Helper to show/hide field errors
+        function toggleError(input, errorId, show) {
+            const errEl = document.getElementById(errorId);
+            if (show) {
+                input.classList.add("input-error");
+                errEl.style.display = "block";
+            } else {
+                input.classList.remove("input-error");
+                errEl.style.display = "none";
+            }
         }
-    });
-</script>
+
+        // Clear errors on input
+        usernameInput.addEventListener("input", () => toggleError(usernameInput, "usernameError", false));
+        passwordInput.addEventListener("input", () => toggleError(passwordInput, "passwordError", false));
+
+        form.addEventListener("submit", function (e) {
+            // Clear global error
+            clientError.style.display = "none";
+            clientError.textContent = "";
+
+            let valid = true;
+            const uVal = usernameInput.value.trim();
+            const pVal = passwordInput.value.trim();
+
+            if (!uVal) {
+                toggleError(usernameInput, "usernameError", true);
+                valid = false;
+            }
+
+            if (!pVal) {
+                toggleError(passwordInput, "passwordError", true);
+                valid = false;
+            }
+
+            if (!valid) {
+                e.preventDefault();
+            }
+        });
+    </script>
 
 </body>
+
 </html>
