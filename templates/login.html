@@ -102,12 +102,43 @@
 
         .auth-error {
             margin: 12px 0;
-            padding: 10px;
+            padding: 12px;
             border-radius: 10px;
-            background: rgba(220, 38, 38, .15);
-            color: #fecaca;
-            font-size: .85rem;
+            background: #fef2f2;
+            border: 1px solid #ef4444;
+            color: #b91c1c;
+            font-size: .9rem;
             text-align: center;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-4px);
+            }
+
+            40% {
+                transform: translateX(4px);
+            }
+
+            60% {
+                transform: translateX(-2px);
+            }
+
+            80% {
+                transform: translateX(2px);
+            }
         }
 
         .input-error {
@@ -149,7 +180,15 @@
                 <!-- Django messages -->
                 {% if messages %}
                 {% for message in messages %}
-                <div class="auth-error">{{ message }}</div>
+                <div class="auth-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <span>{{ message }}</span>
+                </div>
                 {% endfor %}
                 {% endif %}
 
