@@ -1,169 +1,174 @@
 {% extends 'base.html' %}
 {% block content %}
 <form method="post">{% csrf_token %}
-<form method="post">{% csrf_token %}
-<!-- LPO Header -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">LPO / Quotation Header</div>
-                    <div class="panel-subtitle">Basic details about this quotation</div>
+    <!-- LPO Header -->
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-title">LPO / Quotation Header</div>
+            <div class="panel-subtitle">Basic details about this quotation</div>
+        </div>
+        <div class="panel-body">
+            <div class="form-grid">
+                <div class="field-group">
+                    <label for="lpo-no">LPO / Quotation No.</label>
+                    <input id="lpo-no" type="text" placeholder="e.g. MN/440240" name="lpo_no" name="lpo_no">
                 </div>
-                <div class="panel-body">
-                    <div class="form-grid">
-                        <div class="field-group">
-                            <label for="lpo-no">LPO / Quotation No.</label>
-                            <input id="lpo-no" type="text" placeholder="e.g. MN/440240" name="lpo_no" name="lpo_no">
-                        </div>
 
-                        <div class="field-group">
-                            <label for="lpo-date">Date</label>
-                            <input id="lpo-date" type="date" name="date" name="date">
-                        </div>
+                <div class="field-group">
+                    <label for="lpo-date">Date</label>
+                    <input id="lpo-date" type="date" name="date" name="date">
+                </div>
 
-                        <div class="field-group">
-                            <label for="customer-no">Customer Code</label>
-                            <input id="customer-no" type="text" placeholder="e.g. 00007" name="customer_code" name="customer_code">
-                        </div>
+                <div class="field-group">
+                    <label for="customer-no">Customer Code</label>
+                    <input id="customer-no" type="text" placeholder="e.g. 00007" name="customer_code"
+                        name="customer_code">
+                </div>
 
-                        <div class="field-group">
-                            <label for="customer-select">Client / Municipality</label>
-                            <select id="customer-select" name="customer_select" name="customer_select">
-                                <option value="">Select customer…</option>
-                                <option value="Daerah Municipality Bahla">Daerah Municipality Bahla</option>
-                                <option value="Daerah Municipality Manah">Daerah Municipality Manah</option>
-                                <option value="Daerah Municipality Adam">Daerah Municipality Adam</option>
-                                <option value="Other client">Other client…</option>
-                            </select>
-                        </div>
+                <div class="field-group">
+                    <label for="customer-select">Client / Municipality</label>
+                    <select id="customer-select" name="customer_select" name="customer_select">
+                        <option value="">Select customer…</option>
+                        <option value="Daerah Municipality Bahla">Daerah Municipality Bahla</option>
+                        <option value="Daerah Municipality Manah">Daerah Municipality Manah</option>
+                        <option value="Daerah Municipality Adam">Daerah Municipality Adam</option>
+                        <option value="Other client">Other client…</option>
+                    </select>
+                </div>
 
-                        <div class="field-group">
-                            <label for="wilaya-code">Wilaya Code</label>
-                            <input id="wilaya-code" type="text" placeholder="e.g. Al Dakhiliyah" name="wilaya_code">
-                        </div>
+                <div class="field-group">
+                    <label for="wilaya-code">Wilaya Code</label>
+                    <input id="wilaya-code" type="text" placeholder="e.g. Al Dakhiliyah" name="wilaya_code">
+                </div>
 
-                        <div class="field-group">
-                            <label for="location">Location / Site</label>
-                            <input id="location" type="text" placeholder="e.g. Project location / street" name="location_site">
-                        </div>
+                <div class="field-group">
+                    <label for="location">Location / Site</label>
+                    <input id="location" type="text" placeholder="e.g. Project location / street" name="location_site">
+                </div>
 
-                        <div class="field-group">
-                            <label for="ref-no">Reference / Request No.</label>
-                            <input id="ref-no" type="text" placeholder="e.g. Municipality request ref." name="reference_no">
-                        </div>
+                <div class="field-group">
+                    <label for="ref-no">Reference / Request No.</label>
+                    <input id="ref-no" type="text" placeholder="e.g. Municipality request ref." name="reference_no">
+                </div>
 
-                        <div class="field-group">
-                            <label>&nbsp;</label>
-                            <button class="btn-secondary full-width" type="button">+ Add new customer</button>
-                        </div>
-                    </div>
+                <div class="field-group">
+                    <label>&nbsp;</label>
+                    <button class="btn-secondary full-width" type="button">+ Add new customer</button>
                 </div>
             </div>
-
-            <!-- LPO Items (from Warehouse, price manual) -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">LPO Items</div>
-                    <div class="panel-subtitle">
-                        Select items from warehouse. Description & unit come from warehouse, price is entered manually.
-                    </div>
-                </div>
-
-                <div class="panel-body table-wrapper">
-                    <table class="data-table" id="lpo-items-table">
-                        <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Item from Warehouse</th>
-                            <th>Item Code</th>
-                            <th>Description</th>
-                            <th>Quantity</th>
-                            <th>Unit</th>
-                            <th>Unit Price (OMR)</th>
-                            <th>Amount (OMR)</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- Row 1 -->
-                        <tr>
-                            <td class="row-no">1</td>
-                            <td>
-                                <select class="item-select" name="warehouse_code" name="warehouse_code">
-                                    <option value="">Select item…</option>
-                                    <option value="00054">00054 - 4mm 4-core cable</option>
-                                    <option value="00024">00024 - 400W sodium lamp</option>
-                                    <option value="00060">00060 - LED street light 60W</option>
-                                    <option value="00072">00072 - Control box</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="item-code" name="item_code" name="item_code"></td>
-                            <td><input type="text" class="item-desc" name="description" name="description"></td>
-                            <td><input type="number" class="item-qty" value="1" min="0" step="0.001" name="quantity" name="quantity"></td>
-                            <td><input type="text" class="item-unit" name="unit" name="unit"></td>
-                            <td><input type="number" class="item-price" value="0" step="0.001" name="unit_price" name="unit_price"></td>
-                            <td><span class="item-amount">0.000</span></td>
-                        </tr>
-
-                        <!-- Row 2 -->
-                        <tr>
-                            <td class="row-no">2</td>
-                            <td>
-                                <select class="item-select" name="warehouse_code" name="warehouse_code">
-                                    <option value="">Select item…</option>
-                                    <option value="00054">00054 - 4mm 4-core cable</option>
-                                    <option value="00024">00024 - 400W sodium lamp</option>
-                                    <option value="00060">00060 - LED street light 60W</option>
-                                    <option value="00072">00072 - Control box</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="item-code" name="item_code" name="item_code"></td>
-                            <td><input type="text" class="item-desc" name="description" name="description"></td>
-                            <td><input type="number" class="item-qty" value="1" min="0" step="0.001" name="quantity" name="quantity"></td>
-                            <td><input type="text" class="item-unit" name="unit" name="unit"></td>
-                            <td><input type="number" class="item-price" value="0" step="0.001" name="unit_price" name="unit_price"></td>
-                            <td><span class="item-amount">0.000</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-<div class="toolbar" style="margin-top: 0.75rem;">
-    <div class="toolbar-left"></div>
-    <div class="toolbar-right">
-        <button class="btn-primary" type="button" id="add-item-row-lpo">+ Add Item</button>
+        </div>
     </div>
-</div>
 
-                <!-- Totals (without VAT) -->
-                <div class="invoice-totals">
-                    <div class="totals-right">
-                        <div class="totals-row">
-                            <span>Subtotal</span>
-                            <span id="lpo-subtotal-value">0.000</span>
-                        </div>
-                        <div class="totals-row totals-main">
-                            <span>Total Quotation Amount</span>
-                            <span id="lpo-total-value">0.000</span>
-                        </div>
-
-                        <!-- ✅ الأزرار في نفس المكان الذي طلبته (بجانب التوتال) -->
-                        <div style="display:flex; gap:.5rem; justify-content:flex-start; margin: .75rem 0;">
-                            <button class="btn-secondary" type="button" type="button" type="button" onclick="addLpoRow()">+ Add Item</button>
-                            <button class="btn-secondary" type="button" type="button" type="button" onclick="saveLPO()">Save</button>
-                        </div>
-
-                        <!-- زر الطباعة يبقى كما هو في نفس المكان -->
-                        <button class="btn-primary" type="button" onclick="openPrintFromForm()">🖨 Print Quotation</button>
-                    </div>
-                </div>
+    <!-- LPO Items (from Warehouse, price manual) -->
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-title">LPO Items</div>
+            <div class="panel-subtitle">
+                Select items from warehouse. Description & unit come from warehouse, price is entered manually.
             </div>
-</form>
+        </div>
+
+        <div class="panel-body table-wrapper">
+            <table class="data-table" id="lpo-items-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Item from Warehouse</th>
+                        <th>Item Code</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Unit Price (OMR)</th>
+                        <th>Amount (OMR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1 -->
+                    <tr>
+                        <td class="row-no">1</td>
+                        <td>
+                            <select class="item-select" name="warehouse_code" name="warehouse_code">
+                                <option value="">Select item…</option>
+                                <option value="00054">00054 - 4mm 4-core cable</option>
+                                <option value="00024">00024 - 400W sodium lamp</option>
+                                <option value="00060">00060 - LED street light 60W</option>
+                                <option value="00072">00072 - Control box</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="item-code" name="item_code" name="item_code"></td>
+                        <td><input type="text" class="item-desc" name="description" name="description"></td>
+                        <td><input type="number" class="item-qty" value="1" min="0" step="0.001" name="quantity"
+                                name="quantity"></td>
+                        <td><input type="text" class="item-unit" name="unit" name="unit"></td>
+                        <td><input type="number" class="item-price" value="0" step="0.001" name="unit_price"
+                                name="unit_price"></td>
+                        <td><span class="item-amount">0.000</span></td>
+                    </tr>
+
+                    <!-- Row 2 -->
+                    <tr>
+                        <td class="row-no">2</td>
+                        <td>
+                            <select class="item-select" name="warehouse_code" name="warehouse_code">
+                                <option value="">Select item…</option>
+                                <option value="00054">00054 - 4mm 4-core cable</option>
+                                <option value="00024">00024 - 400W sodium lamp</option>
+                                <option value="00060">00060 - LED street light 60W</option>
+                                <option value="00072">00072 - Control box</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="item-code" name="item_code" name="item_code"></td>
+                        <td><input type="text" class="item-desc" name="description" name="description"></td>
+                        <td><input type="number" class="item-qty" value="1" min="0" step="0.001" name="quantity"
+                                name="quantity"></td>
+                        <td><input type="text" class="item-unit" name="unit" name="unit"></td>
+                        <td><input type="number" class="item-price" value="0" step="0.001" name="unit_price"
+                                name="unit_price"></td>
+                        <td><span class="item-amount">0.000</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="toolbar" style="margin-top: 0.75rem;">
+            <div class="toolbar-left"></div>
+            <div class="toolbar-right">
+                <button class="btn-primary" type="button" id="add-item-row-lpo">+ Add Item</button>
+            </div>
+        </div>
+
+        <!-- Totals (without VAT) -->
+        <div class="invoice-totals">
+            <div class="totals-right">
+                <div class="totals-row">
+                    <span>Subtotal</span>
+                    <span id="lpo-subtotal-value">0.000</span>
+                </div>
+                <div class="totals-row totals-main">
+                    <span>Total Quotation Amount</span>
+                    <span id="lpo-total-value">0.000</span>
+                </div>
+
+                <!-- ✅ الأزرار في نفس المكان الذي طلبته (بجانب التوتال) -->
+                <div style="display:flex; gap:.5rem; justify-content:flex-start; margin: .75rem 0;">
+                    <button class="btn-secondary" type="button" type="button" type="button" onclick="addLpoRow()">+ Add
+                        Item</button>
+                    <button class="btn-secondary" type="button" type="button" type="button"
+                        onclick="saveLPO()">Save</button>
+                </div>
+
+                <!-- زر الطباعة يبقى كما هو في نفس المكان -->
+                <button class="btn-primary" type="button" onclick="openPrintFromForm()">🖨 Print Quotation</button>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock %}
 
 {% block scripts %}
 <script>
     // Warehouse items (same codes as invoice/warehouse)
-    const warehouseItems = {{ warehouse_items_json|safe }};
+    const warehouseItems = {{ warehouse_items_json| safe }};
 
     function format3(value) {
         return (Number(value) || 0).toFixed(3);
@@ -231,81 +236,84 @@
     }
 
     function bindRow(row) {
-    if (row.dataset.bound === "1") return;
-    row.dataset.bound = "1";
+        if (row.dataset.bound === "1") return;
+        row.dataset.bound = "1";
 
-    const select = row.querySelector(".item-select");
-    const codeInput = row.querySelector(".item-code");
-    const descInput = row.querySelector(".item-desc");
-    const unitInput = row.querySelector(".item-unit");
-    const qtyInput = row.querySelector(".item-qty");
-    const priceInput = row.querySelector(".item-price");
+        const select = row.querySelector(".item-select");
+        const codeInput = row.querySelector(".item-code");
+        const descInput = row.querySelector(".item-desc");
+        const unitInput = row.querySelector(".item-unit");
+        const qtyInput = row.querySelector(".item-qty");
+        const priceInput = row.querySelector(".item-price");
 
-    select.addEventListener("change", () => {
-        const code = select.value;
-        if (warehouseItems[code]) {
-            const item = warehouseItems[code];
-            codeInput.value = item.code || "";
-            descInput.value = item.description || item.name || "";
-            unitInput.value = item.unitLabel || "";
-            if (Number(priceInput.value || "0") === 0) {
-                priceInput.value = item.price || "0";
+        select.addEventListener("change", () => {
+            const code = select.value;
+            if (warehouseItems[code]) {
+                const item = warehouseItems[code];
+                codeInput.value = item.code || "";
+                descInput.value = item.description || item.name || "";
+                unitInput.value = item.unitLabel || "";
+                if (Number(priceInput.value || "0") === 0) {
+                    priceInput.value = item.price || "0";
+                }
+            } else {
+                // clear when nothing selected
+                codeInput.value = "";
+                descInput.value = "";
+                unitInput.value = "";
+                priceInput.value = "0";
             }
-        } else {
-            // clear when nothing selected
-            codeInput.value = "";
-            descInput.value = "";
-            unitInput.value = "";
-            priceInput.value = "0";
-        }
-        recalcRow(row);
-        recalcTotals();
-    });
-
-    [qtyInput, priceInput].forEach(input => {
-        input.addEventListener("input", () => {
             recalcRow(row);
             recalcTotals();
         });
-    });
-}
 
-function attachEvents() {
-    document.querySelectorAll("#lpo-items-table tbody tr").forEach(bindRow);
-}
-
-function renumberRows() {
-    const rows = document.querySelectorAll("#lpo-items-table tbody tr");
-    rows.forEach((row, i) => {
-        const noCell = row.querySelector("td");
-        if (noCell) noCell.textContent = String(i + 1);
-    });
-}
-
-const addBtn = document.getElementById("add-item-row-lpo");
-if (addBtn) {
-    addBtn.addEventListener("click", () => {
-        const tbody = document.querySelector("#lpo-items-table tbody");
-        const lastRow = tbody.querySelector("tr:last-child");
-        const newRow = lastRow.cloneNode(true);
-
-        // clear inputs/selects
-        newRow.querySelectorAll("select").forEach(s => s.value = "");
-        newRow.querySelectorAll("input").forEach(inp => {
-            if (inp.classList.contains("item-total")) {
-                inp.value = "0.000";
-            } else if (inp.classList.contains("item-price")) {
-                inp.value = "0";
-            } else {
-                inp.value = "";
-            }
+        [qtyInput, priceInput].forEach(input => {
+            input.addEventListener("input", () => {
+                recalcRow(row);
+                recalcTotals();
+            });
         });
+    }
 
-        tbody.appendChild(newRow);
-        bindRow(newRow);
-        renumberRows();
-        recalcTotals();
-    });
-}
+    function attachEvents() {
+        document.querySelectorAll("#lpo-items-table tbody tr").forEach(bindRow);
+    }
+
+    function renumberRows() {
+        const rows = document.querySelectorAll("#lpo-items-table tbody tr");
+        rows.forEach((row, i) => {
+            const noCell = row.querySelector("td");
+            if (noCell) noCell.textContent = String(i + 1);
+        });
+    }
+
+    const addBtn = document.getElementById("add-item-row-lpo");
+    if (addBtn) {
+        addBtn.addEventListener("click", () => {
+            const tbody = document.querySelector("#lpo-items-table tbody");
+            const lastRow = tbody.querySelector("tr:last-child");
+            const newRow = lastRow.cloneNode(true);
+
+            // clear inputs/selects
+            newRow.querySelectorAll("select").forEach(s => s.value = "");
+            newRow.querySelectorAll("input").forEach(inp => {
+                if (inp.classList.contains("item-total")) {
+                    inp.value = "0.000";
+                } else if (inp.classList.contains("item-price")) {
+                    inp.value = "0";
+                } else {
+                    inp.value = "";
+                }
+            });
+
+            tbody.appendChild(newRow);
+            bindRow(newRow);
+            renumberRows();
+            recalcTotals();
+        });
+    }
 
 
+
+</script>
+{% endblock %}
