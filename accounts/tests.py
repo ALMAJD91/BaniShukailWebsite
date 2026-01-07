@@ -7,11 +7,18 @@ User = get_user_model()
 class AccountsTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.admin_user = User.objects.create_user(
-            username="admin", 
-            password="adminpassword",
-            role=User.Role.ADMIN
-        )
+        # Admin might be created by signals (apps.py)
+        try:
+            self.admin_user = User.objects.get(username="admin")
+            self.admin_user.set_password("adminpassword")
+            self.admin_user.role = User.Role.ADMIN
+            self.admin_user.save()
+        except User.DoesNotExist:
+            self.admin_user = User.objects.create_user(
+                username="admin", 
+                password="adminpassword",
+                role=User.Role.ADMIN
+            )
         self.employee_user = User.objects.create_user(
             username="employee",
             password="employeepassword",
