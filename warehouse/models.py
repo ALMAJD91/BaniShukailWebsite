@@ -1,6 +1,15 @@
 from django.db import models
 
+class Warehouse(models.Model):
+    warehouse_no = models.AutoField(primary_key=True)
+    warehouse_name = models.CharField(max_length=200)
+    warehouse_location = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.warehouse_name
+
 class WarehouseItem(models.Model):
+    location = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, blank=True)
     class ItemType(models.TextChoices):
         FIXED = "fixed", "Fixed"
         PER_METER = "per_meter", "Per meter"
