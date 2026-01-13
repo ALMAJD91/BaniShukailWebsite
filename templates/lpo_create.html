@@ -149,18 +149,26 @@
                     <span id="lpo-total-value">0.000</span>
                 </div>
 
-                <!-- ✅ الأزرار في نفس المكان الذي طلبته (بجانب التوتال) -->
+                <!-- Fixed Buttons -->
                 <div style="display:flex; gap:.5rem; justify-content:flex-start; margin: .75rem 0;">
-                    <button class="btn-secondary" type="button" type="button" type="button" onclick="addLpoRow()">+ Add
-                        Item</button>
-                    <button class="btn-secondary" type="button" type="button" type="button"
-                        onclick="saveLPO()">Save</button>
+                    <button class="btn-secondary" type="button" id="add-item-row-lpo">+ Add Item</button>
+                    <button class="btn-primary" type="submit">Save</button>
                 </div>
 
-                <!-- زر الطباعة يبقى كما هو في نفس المكان -->
-                <button class="btn-primary" type="button" onclick="openPrintFromForm()">🖨 Print Quotation</button>
+                <button class="btn-primary" type="button" onclick="printQuotation()">🖨 Print Quotation</button>
             </div>
         </div>
+    </div>
+
+    <!-- Printed by footer (visible only in print) -->
+    <div id="print-footer" style="
+        text-align: center;
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 2rem;
+        display: none;
+    ">
+        Created by: <span id="printedBy"></span>
     </div>
 </form>
 {% endblock %}
@@ -200,7 +208,10 @@
         document.getElementById("lpo-total-value").textContent = format3(subtotal);
     }
 
-    function bindRowEvents(row) {
+    function bindRow(row) {
+        if (row.dataset.bound === "1") return;
+        row.dataset.bound = "1";
+
         const select = row.querySelector(".item-select");
         const codeInput = row.querySelector(".item-code");
         const descInput = row.querySelector(".item-desc");
@@ -213,13 +224,18 @@
                 const code = select.value;
                 if (warehouseItems[code]) {
                     const item = warehouseItems[code];
-                    if (codeInput) codeInput.value = item.code;
-                    if (descInput) descInput.value = item.description;
-                    if (unitInput) unitInput.value = item.unitLabel;
+                    codeInput.value = item.code || "";
+                    descInput.value = item.description || item.name || "";
+                    unitInput.value = item.unitLabel || "";
+                    if (Number(priceInput.value || "0") === 0) {
+                        priceInput.value = item.price || "0";
+                    }
                 } else {
-                    if (codeInput) codeInput.value = "";
-                    if (descInput) descInput.value = "";
-                    if (unitInput) unitInput.value = "";
+                    // clear when nothing selected
+                    codeInput.value = "";
+                    descInput.value = "";
+                    unitInput.value = "";
+                    priceInput.value = "0";
                 }
                 recalcRow(row);
                 recalcTotals();
@@ -227,51 +243,12 @@
         }
 
         [qtyInput, priceInput].forEach(input => {
-            if (!input) return;
-            input.addEventListener("input", () => {
-                recalcRow(row);
-                recalcTotals();
-            });
-        });
-    }
-
-    function bindRow(row) {
-        if (row.dataset.bound === "1") return;
-        row.dataset.bound = "1";
-
-        const select = row.querySelector(".item-select");
-        const codeInput = row.querySelector(".item-code");
-        const descInput = row.querySelector(".item-desc");
-        const unitInput = row.querySelector(".item-unit");
-        const qtyInput = row.querySelector(".item-qty");
-        const priceInput = row.querySelector(".item-price");
-
-        select.addEventListener("change", () => {
-            const code = select.value;
-            if (warehouseItems[code]) {
-                const item = warehouseItems[code];
-                codeInput.value = item.code || "";
-                descInput.value = item.description || item.name || "";
-                unitInput.value = item.unitLabel || "";
-                if (Number(priceInput.value || "0") === 0) {
-                    priceInput.value = item.price || "0";
-                }
-            } else {
-                // clear when nothing selected
-                codeInput.value = "";
-                descInput.value = "";
-                unitInput.value = "";
-                priceInput.value = "0";
+            if (input) {
+                input.addEventListener("input", () => {
+                    recalcRow(row);
+                    recalcTotals();
+                });
             }
-            recalcRow(row);
-            recalcTotals();
-        });
-
-        [qtyInput, priceInput].forEach(input => {
-            input.addEventListener("input", () => {
-                recalcRow(row);
-                recalcTotals();
-            });
         });
     }
 
@@ -292,19 +269,25 @@
         addBtn.addEventListener("click", () => {
             const tbody = document.querySelector("#lpo-items-table tbody");
             const lastRow = tbody.querySelector("tr:last-child");
+            if (!lastRow) return; // safety
             const newRow = lastRow.cloneNode(true);
+            newRow.dataset.bound = "0"; // reset bound status
 
             // clear inputs/selects
             newRow.querySelectorAll("select").forEach(s => s.value = "");
             newRow.querySelectorAll("input").forEach(inp => {
-                if (inp.classList.contains("item-total")) {
-                    inp.value = "0.000";
+                if (inp.classList.contains("item-total") || inp.classList.contains("item-amount")) {
+                    // span or input? check structure. In this file it is span .item-amount
                 } else if (inp.classList.contains("item-price")) {
                     inp.value = "0";
+                } else if (inp.classList.contains("item-qty")) {
+                    inp.value = "1";
                 } else {
                     inp.value = "";
                 }
             });
+            const amountSpan = newRow.querySelector(".item-amount");
+            if (amountSpan) amountSpan.textContent = "0.000";
 
             tbody.appendChild(newRow);
             bindRow(newRow);
@@ -313,7 +296,22 @@
         });
     }
 
+    function printQuotation() {
+        const userNameElement = document.querySelector(".user-name");
+        const userName = userNameElement ? userNameElement.textContent : "";
+        const printedBySpan = document.getElementById("printedBy");
+        if (printedBySpan) printedBySpan.textContent = userName;
 
+        const footer = document.getElementById("print-footer");
+        if (footer) footer.style.display = "block";
 
+        window.print();
+
+        if (footer) footer.style.display = "none";
+    }
+
+    // Init
+    attachEvents();
+    recalcTotals();
 </script>
 {% endblock %}

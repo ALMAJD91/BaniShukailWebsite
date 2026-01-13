@@ -1,12 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Invoice {{ invoice.invoice_no }} - Print</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{% static 'style.css' %}" />
 </head>
+
 <body>
   <div style="padding:20px;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -28,12 +30,30 @@
       </div>
       <div class="panel-body">
         <div class="form-grid">
-          <div class="field-group"><label>Operation Order</label><div>{{ invoice.operation_order_no|default:"-" }}</div></div>
-          <div class="field-group"><label>Customer Code</label><div>{{ invoice.customer.code }}</div></div>
-          <div class="field-group"><label>Client / Municipality</label><div>{{ invoice.customer.name }}</div></div>
-          <div class="field-group"><label>Wilaya</label><div>{{ invoice.wilaya_code|default:"-" }}</div></div>
-          <div class="field-group"><label>Location</label><div>{{ invoice.location_site|default:"-" }}</div></div>
-          <div class="field-group"><label>Printed by</label><div>{{ invoice.created_by.get_full_name|default:invoice.created_by.username }}</div></div>
+          <div class="field-group"><label>Operation Order</label>
+            <div>{{ invoice.operation_order_no|default:"-" }}</div>
+          </div>
+          <div class="field-group"><label>Customer Code</label>
+            <div>{{ invoice.customer.code }}</div>
+          </div>
+          <div class="field-group"><label>Client / Municipality</label>
+            <div>{{ invoice.customer.name }}</div>
+          </div>
+          <div class="field-group"><label>Wilaya</label>
+            <div>{{ invoice.wilaya_code|default:"-" }}</div>
+          </div>
+          <div class="field-group"><label>Location</label>
+            <div>{{ invoice.location_site|default:"-" }}</div>
+          </div>
+          <div class="field-group"><label>Printed by</label>
+            <div>
+              {% if invoice.created_by %}
+              {{ invoice.created_by.get_full_name|default:invoice.created_by.get_username }}
+              {% else %}
+              -
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -46,7 +66,13 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>No.</th><th>Item Code</th><th>Description</th><th>Qty</th><th>Unit</th><th>Unit Price</th><th>Amount</th>
+              <th>No.</th>
+              <th>Item Code</th>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Unit</th>
+              <th>Unit Price</th>
+              <th>Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -61,7 +87,9 @@
               <td>{{ it.amount|floatformat:3 }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="7">No items.</td></tr>
+            <tr>
+              <td colspan="7">No items.</td>
+            </tr>
             {% endfor %}
           </tbody>
         </table>
@@ -70,11 +98,13 @@
       <div class="invoice-totals">
         <div class="totals-right">
           <div class="totals-row"><span>Subtotal</span><span>{{ invoice.subtotal|floatformat:3 }}</span></div>
-          <div class="totals-row"><span>VAT ({{ invoice.vat_rate }}%)</span><span>{{ invoice.vat_amount|floatformat:3 }}</span></div>
+          <div class="totals-row"><span>VAT ({{ invoice.vat_rate }}%)</span><span>{{ invoice.vat_amount|floatformat:3
+              }}</span></div>
           <div class="totals-row totals-main"><span>Total</span><span>{{ invoice.total|floatformat:3 }}</span></div>
         </div>
       </div>
     </div>
   </div>
 </body>
+
 </html>
