@@ -1,177 +1,200 @@
 {% extends 'base.html' %}
 {% block content %}
 <form id="filter-form" method="get">
-<div class="panel">
-    <div class="panel-header">
-        <div class="panel-title">Employees List</div>
-        <div class="panel-subtitle">
-            Basic information for each employee including nationality, join date, passport & labour card expiry.
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-title">Employees List</div>
+            <div class="panel-subtitle">
+                Basic information for each employee including nationality, join date, passport & labour card expiry.
+            </div>
         </div>
-    </div>
-    <div class="panel-body">
+        <div class="panel-body">
 
-        <!-- Filters & actions -->
-        <div class="toolbar" style="margin-bottom: 0.75rem;">
-            <div class="toolbar-left">
-                <div class="field-group">
-                    <label for="search-emp">Search employees</label>
-                    <input id="search-emp" name="q" type="text" placeholder="Search by name or nationality" value="{{ search_q }}" onchange="this.form.submit()" />
+            <!-- Filters & actions -->
+            <div class="toolbar" style="margin-bottom: 0.75rem;">
+                <div class="toolbar-left">
+                    <div class="field-group">
+                        <label for="search-emp">Search employees</label>
+                        <input id="search-emp" name="q" type="text" placeholder="Search by name or nationality"
+                            value="{{ search_q }}" onchange="this.form.submit()" />
+                    </div>
+
+                    <div class="field-group">
+                        <label for="filter-nationality">Nationality</label>
+                        <select id="filter-nationality" name="nationality" onchange="this.form.submit()">
+                            <option value="">All</option>
+                            <option value="Omani" {% if selected_nationality=='Omani' %}selected{% endif %}>Omani
+                            </option>
+                            <option value="Indian" {% if selected_nationality=='Indian' %}selected{% endif %}>Indian
+                            </option>
+                            <option value="Bangladeshi" {% if selected_nationality=='Bangladeshi' %}selected{% endif %}>
+                                Bangladeshi</option>
+                            <option value="Pakistani" {% if selected_nationality=='Pakistani' %}selected{% endif %}>
+                                Pakistani</option>
+                            <option value="Egyptian" {% if selected_nationality=='Egyptian' %}selected{% endif %}>
+                                Egyptian</option>
+                            <option value="Other" {% if selected_nationality=='Other' %}selected{% endif %}>Other
+                            </option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="field-group">
-                    <label for="filter-nationality">Nationality</label>
-                    <select id="filter-nationality" name="nationality" onchange="this.form.submit()">
-                        <option value="">All</option>
-                        <option value="Omani" {% if selected_nationality == 'Omani' %}selected{% endif %}>Omani</option>
-                        <option value="Indian" {% if selected_nationality == 'Indian' %}selected{% endif %}>Indian</option>
-                        <option value="Bangladeshi" {% if selected_nationality == 'Bangladeshi' %}selected{% endif %}>Bangladeshi</option>
-                        <option value="Pakistani" {% if selected_nationality == 'Pakistani' %}selected{% endif %}>Pakistani</option>
-                        <option value="Egyptian" {% if selected_nationality == 'Egyptian' %}selected{% endif %}>Egyptian</option>
-                        <option value="Other" {% if selected_nationality == 'Other' %}selected{% endif %}>Other</option>
-                    </select>
+                <div class="toolbar-right">
+                    <button type="button" class="btn-secondary" onclick="window.print()">🖨 Print List</button>
+                    <button type="button" class="btn-primary" onclick="clearEmployeeForm()">+ Add Employee</button>
                 </div>
             </div>
 
-            <div class="toolbar-right">
-                <button type="button" class="btn-secondary" onclick="window.print()">🖨 Print List</button>
-                <button type="button" class="btn-primary" onclick="clearEmployeeForm()">+ Add Employee</button>
+            <style>
+                @media print {
+                    body * {
+                        visibility: hidden;
+                    }
+
+                    .panel-body,
+                    .panel-body * {
+                        visibility: visible;
+                    }
+
+                    .panel-body {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        background: white;
+                        padding: 0;
+                    }
+
+                    .toolbar,
+                    .btn-secondary,
+                    .btn-primary,
+                    .form-panel {
+                        display: none !important;
+                    }
+
+                    .data-table {
+                        width: 100%;
+                    }
+                }
+            </style>
+
+            <!-- Employees table -->
+            <div class="table-wrapper">
+                <table class="data-table" id="employees-table">
+                    <thead>
+                        <tr>
+                            <th>Employee Name</th>
+                            <th>Nationality</th>
+                            <th>Date Joined</th>
+                            <th>Passport Expiry</th>
+                            <th>Labour Card Expiry</th>
+                            <th>Monthly Salary (OMR)</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in employees %}
+                        <tr>
+                            <td>{{ e.name }} <br><small style="color:#666">{{ e.emp_no }}</small></td>
+                            <td>{{ e.nationality }}</td>
+                            <td>{{ e.date_joined|date:"Y-m-d"|default:"-" }}</td>
+                            <td {% if e.passport_expiry and e.passport_expiry < warning_date
+                                %}style="color: #dc2626; font-weight: bold;" {% endif %}>{{
+                                e.passport_expiry|date:"Y-m-d"|default:"-" }}</td>
+                            <td {% if e.labour_card_expiry and e.labour_card_expiry < warning_date
+                                %}style="color: #dc2626; font-weight: bold;" {% endif %}>{{
+                                e.labour_card_expiry|date:"Y-m-d"|default:"-" }}</td>
+                            <td>{{ e.base_salary|floatformat:3 }}</td>
+                            <td>{{ e.notes }}</td>
+                            <td>
+                                <button type="button" class="btn-secondary"
+                                    onclick='editEmployee({{ e.id }}, "{{ e.emp_no }}", "{{ e.name }}", "{{ e.nationality }}", "{{ e.date_joined|date:"Y-m-d" }}", "{{ e.passport_expiry|date:"Y-m-d" }}", "{{ e.labour_card_expiry|date:"Y-m-d" }}", "{{ e.base_salary }}", "{{ e.notes|escapejs }}")'>Edit</button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="small-text">No employees yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
+
         </div>
-
-        <style>
-            @media print {
-                body * {
-                    visibility: hidden;
-                }
-                .panel-body, .panel-body * {
-                    visibility: visible;
-                }
-                .panel-body {
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                    background: white;
-                    padding: 0;
-                }
-                .toolbar, .btn-secondary, .btn-primary, .form-panel {
-                    display: none !important;
-                }
-                .data-table {
-                    width: 100%;
-                }
-            }
-        </style>
-
-        <!-- Employees table -->
-        <div class="table-wrapper">
-            <table class="data-table" id="employees-table">
-                <thead>
-                <tr>
-                    <th>Employee Name</th>
-                    <th>Nationality</th>
-                    <th>Date Joined</th>
-                    <th>Passport Expiry</th>
-                    <th>Labour Card Expiry</th>
-                    <th>Monthly Salary (OMR)</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for e in employees %}
-                <tr>
-                    <td>{{ e.name }} <br><small style="color:#666">{{ e.emp_no }}</small></td>
-                    <td>{{ e.nationality }}</td>
-                    <td>{{ e.date_joined|date:"Y-m-d"|default:"-" }}</td>
-                    <td>{{ e.passport_expiry|date:"Y-m-d"|default:"-" }}</td>
-                    <td>{{ e.labour_card_expiry|date:"Y-m-d"|default:"-" }}</td>
-                    <td>{{ e.base_salary|floatformat:3 }}</td>
-                    <td>{{ e.notes }}</td>
-                    <td>
-                        <button type="button" class="btn-secondary" onclick='editEmployee({{ e.id }}, "{{ e.emp_no }}", "{{ e.name }}", "{{ e.nationality }}", "{{ e.date_joined|date:"Y-m-d" }}", "{{ e.passport_expiry|date:"Y-m-d" }}", "{{ e.labour_card_expiry|date:"Y-m-d" }}", "{{ e.base_salary }}", "{{ e.notes|escapejs }}")'>Edit</button>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="8" class="small-text">No employees yet.</td></tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
     </div>
-</div>
 </form>
 
 <!-- Add / Edit Employee Form -->
 <form method="post" action="{% url 'employees:save' %}">
-{% csrf_token %}
-<input type="hidden" id="emp-id" name="emp_id" value="">
+    {% csrf_token %}
+    <input type="hidden" id="emp-id" name="emp_id" value="">
 
-<div class="panel form-panel" style="margin-top: 1rem;">
-    <div class="panel-header">
-        <div class="panel-title" id="form-title">Add / Edit Employee</div>
-        <div class="panel-subtitle">
-            Enter or update employee information manually, including expiry dates and salary.
-        </div>
-    </div>
-    <div class="panel-body">
-        <div class="form-grid-3">
-             <div class="field-group">
-                <label for="emp-no">Employee No.</label>
-                <input id="emp-no" name="emp_no" type="text" placeholder="e.g. 001" required />
-            </div>
-
-            <div class="field-group">
-                <label for="emp-name">Employee Name</label>
-                <input id="emp-name" name="name" type="text" placeholder="Employee full name" required />
-            </div>
-
-            <div class="field-group">
-                <label for="emp-nationality">Nationality</label>
-                <input id="emp-nationality" name="nationality" type="text" list="nationality-list" placeholder="e.g. Omani / Indian" />
-                <datalist id="nationality-list">
-                    <option value="Omani">
-                    <option value="Indian">
-                    <option value="Bangladeshi">
-                    <option value="Pakistani">
-                    <option value="Egyptian">
-                    <option value="Filipino">
-                </datalist>
-            </div>
-
-            <div class="field-group">
-                <label for="emp-join-date">Date Joined</label>
-                <input id="emp-join-date" name="date_joined" type="date" />
-            </div>
-
-            <div class="field-group">
-                <label for="emp-passport-expiry">Passport Expiry Date</label>
-                <input id="emp-passport-expiry" name="passport_expiry" type="date" />
-            </div>
-
-            <div class="field-group">
-                <label for="emp-labour-expiry">Labour Card Expiry Date</label>
-                <input id="emp-labour-expiry" name="labour_card_expiry" type="date" />
-            </div>
-
-            <div class="field-group">
-                <label for="emp-salary">Monthly Salary (OMR)</label>
-                <input id="emp-salary" name="base_salary" type="number" step="0.001" placeholder="e.g. 350.000" />
-            </div>
-
-            <div class="field-group">
-                <label for="emp-notes">Notes</label>
-                <input id="emp-notes" name="notes" type="text" placeholder="Any notes about this employee" />
-            </div>
-
-            <div class="field-group">
-                <label>&nbsp;</label>
-                <button type="submit" class="btn-primary full-width">Save / Update</button>
+    <div class="panel form-panel" style="margin-top: 1rem;">
+        <div class="panel-header">
+            <div class="panel-title" id="form-title">Add / Edit Employee</div>
+            <div class="panel-subtitle">
+                Enter or update employee information manually, including expiry dates and salary.
             </div>
         </div>
+        <div class="panel-body">
+            <div class="form-grid-3">
+                <div class="field-group">
+                    <label for="emp-no">Employee No.</label>
+                    <input id="emp-no" name="emp_no" type="text" placeholder="e.g. 001" required />
+                </div>
+
+                <div class="field-group">
+                    <label for="emp-name">Employee Name</label>
+                    <input id="emp-name" name="name" type="text" placeholder="Employee full name" required />
+                </div>
+
+                <div class="field-group">
+                    <label for="emp-nationality">Nationality</label>
+                    <input id="emp-nationality" name="nationality" type="text" list="nationality-list"
+                        placeholder="e.g. Omani / Indian" />
+                    <datalist id="nationality-list">
+                        <option value="Omani">
+                        <option value="Indian">
+                        <option value="Bangladeshi">
+                        <option value="Pakistani">
+                        <option value="Egyptian">
+                        <option value="Filipino">
+                    </datalist>
+                </div>
+
+                <div class="field-group">
+                    <label for="emp-join-date">Date Joined</label>
+                    <input id="emp-join-date" name="date_joined" type="date" />
+                </div>
+
+                <div class="field-group">
+                    <label for="emp-passport-expiry">Passport Expiry Date</label>
+                    <input id="emp-passport-expiry" name="passport_expiry" type="date" />
+                </div>
+
+                <div class="field-group">
+                    <label for="emp-labour-expiry">Labour Card Expiry Date</label>
+                    <input id="emp-labour-expiry" name="labour_card_expiry" type="date" />
+                </div>
+
+                <div class="field-group">
+                    <label for="emp-salary">Monthly Salary (OMR)</label>
+                    <input id="emp-salary" name="base_salary" type="number" step="0.001" placeholder="e.g. 350.000" />
+                </div>
+
+                <div class="field-group">
+                    <label for="emp-notes">Notes</label>
+                    <input id="emp-notes" name="notes" type="text" placeholder="Any notes about this employee" />
+                </div>
+
+                <div class="field-group">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="btn-primary full-width">Save / Update</button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 </form>
 
 <script>
@@ -199,7 +222,7 @@
         document.getElementById('emp-labour-expiry').value = labourExpiry === 'None' ? '' : labourExpiry;
         document.getElementById('emp-salary').value = salary;
         document.getElementById('emp-notes').value = notes;
-        
+
         document.getElementById('form-title').innerText = 'Edit Employee: ' + name;
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }

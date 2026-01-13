@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -23,6 +24,8 @@ def list_employees(request):
     if nationality and nationality != "All":
         employees = employees.filter(nationality__iexact=nationality)
 
+    warning_date = date.today() + timedelta(days=30)
+
     return render(request, "employees.html", {
         "title": "Employees",
         "subtitle": "Employee list and payroll basics",
@@ -30,6 +33,7 @@ def list_employees(request):
         "employees": employees,
         "search_q": q,
         "selected_nationality": nationality,
+        "warning_date": warning_date,
     })
 
 @login_required
