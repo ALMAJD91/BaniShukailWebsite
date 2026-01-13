@@ -11,12 +11,12 @@
             <div class="form-grid">
                 <div class="field-group">
                     <label for="lpo-no">LPO / Quotation No.</label>
-                    <input id="lpo-no" type="text" placeholder="e.g. MN/440240" name="lpo_no" name="lpo_no">
+                    <input id="lpo-no" type="text" placeholder="e.g. MN/440240" name="lpo_no" required>
                 </div>
 
                 <div class="field-group">
                     <label for="lpo-date">Date</label>
-                    <input id="lpo-date" type="date" name="date" name="date">
+                    <input id="lpo-date" type="date" name="date" required>
                 </div>
 
                 <div class="field-group">
@@ -130,12 +130,7 @@
             </table>
         </div>
 
-        <div class="toolbar" style="margin-top: 0.75rem;">
-            <div class="toolbar-left"></div>
-            <div class="toolbar-right">
-                <button class="btn-primary" type="button" id="add-item-row-lpo">+ Add Item</button>
-            </div>
-        </div>
+
 
         <!-- Totals (without VAT) -->
         <div class="invoice-totals">
