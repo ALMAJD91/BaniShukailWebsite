@@ -224,6 +224,7 @@ body {
     border: 1px solid #e5e7eb;
     display: flex;
     flex-direction: column;
+    margin-bottom: 1.5rem;
 }
 
 .panel-header {
@@ -528,23 +529,69 @@ body {
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1024px) {
-    .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .two-column { grid-template-columns: 1fr; }
-    .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .form-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .two-column {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .form-grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .topbar { padding: 1rem; }
-    .content { padding: 1rem; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .two-column { grid-template-columns: 1fr; }
-    .toolbar { flex-direction: column; align-items: stretch; }
-    .toolbar-left { flex-direction: column; align-items: stretch; }
-    .field-group input, .field-group select { width: 100%; min-width: 0; }
-    .data-table { display: block; overflow-x: auto; }
-    .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+    .sidebar {
+        display: none;
+    }
+
+    .topbar {
+        padding: 1rem;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .two-column {
+        grid-template-columns: 1fr;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .toolbar-left {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .field-group input,
+    .field-group select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .data-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .form-grid,
+    .form-grid-3 {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ========== LOGIN PAGE (AUTH) ========== */
@@ -677,18 +724,58 @@ body {
 }
 
 /* ========== PRINT (SAFE: Only for pages with .print-doc) ========== */
+/* ========== PRINT (SAFE: Only for pages with .print-doc OR just printing panels) ========== */
 @media print {
-
-    body.print-doc {
-        background: #fff !important;
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
 
-    /* اخفاء عناصر غير مهمة فقط في صفحات الطباعة */
-    body.print-doc .print-toolbar,
-    body.print-doc .no-print,
-    body.print-doc button {
+    /* Hide UI elements */
+    .sidebar,
+    .topbar,
+    .no-print,
+    .btn-primary,
+    .btn-secondary,
+    .btn-small,
+    .toolbar,
+    button {
         display: none !important;
+    }
+
+    /* Reset Panel Styles for Print */
+    .panel {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .panel-header {
+        border-bottom: 2px solid #000;
+    }
+
+    .layout {
+        display: block !important;
+    }
+
+    .main {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .content {
+        padding: 0 !important;
+    }
+
+    /* Ensure table headers are visible */
+    thead {
+        display: table-header-group;
+    }
+
+    tr {
+        page-break-inside: avoid;
     }
 }

@@ -9,6 +9,10 @@
         <form method="post">{% csrf_token %}
             <div class="form-grid">
                 <div class="field-group">
+                    <label>Location</label>
+                    {{ form.location }}
+                </div>
+                <div class="field-group">
                     <label>Code</label>
                     {{ form.code }}
                 </div>
