@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from .models import LPO, LPOItem
 from warehouse.models import WarehouseItem
+from invoices.models import Customer
 
 
 @login_required
@@ -28,12 +29,15 @@ def create_lpo(request):
     if request.method == "POST":
         lpo_no = request.POST.get("lpo_no", "").strip()
         date_str = request.POST.get("date", "").strip()
-        customer_name = request.POST.get("customer_name", "").strip()
-        attention = request.POST.get("attention", "").strip()
-        reference = request.POST.get("reference", "").strip()
-        subject = request.POST.get("subject", "").strip()
-        project = request.POST.get("project", "").strip()
-        location = request.POST.get("location", "").strip()
+        
+        # Customer handling
+        customer_code = request.POST.get("customer_code", "").strip()
+        customer_name = request.POST.get("customer_select", "").strip()
+        
+        # Other fields
+        wilaya_code = request.POST.get("wilaya_code", "").strip()
+        location_site = request.POST.get("location_site", "").strip()
+        reference_no = request.POST.get("reference_no", "").strip()
 
         if not lpo_no or not date_str:
             messages.error(request, "LPO No and Date are required.")
@@ -43,15 +47,36 @@ def create_lpo(request):
             except Exception:
                 date = timezone.now().date()
 
+            # Find or Create Customer
+            customer = None
+            if customer_code:
+                customer = Customer.objects.filter(code=customer_code).first()
+            
+            if not customer and customer_name:
+                customer = Customer.objects.filter(name=customer_name).first()
+            
+            if not customer:
+                # Create new customer if meaningful data exists
+                if customer_code or customer_name:
+                    code_to_use = customer_code or f"CUST-{lpo_no}" # Fallback code
+                    name_to_use = customer_name or f"Customer {code_to_use}"
+                    customer = Customer.objects.create(
+                        code=code_to_use, 
+                        name=name_to_use,
+                        wilaya=wilaya_code
+                    )
+
+            if not customer:
+                 messages.error(request, "Please select or enter a valid customer.")
+                 return redirect("lpo:create")
+
             lpo = LPO.objects.create(
                 lpo_no=lpo_no,
                 date=date,
-                customer_name=customer_name,
-                attention=attention,
-                reference=reference,
-                subject=subject,
-                project=project,
-                location=location,
+                customer=customer,
+                wilaya_code=wilaya_code,
+                location_site=location_site,
+                reference_no=reference_no,
                 created_by=request.user,
             )
 

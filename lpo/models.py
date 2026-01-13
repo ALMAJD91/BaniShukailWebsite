@@ -8,6 +8,9 @@ class LPO(models.Model):
     date = models.DateField()
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name="lpos")
     subject = models.CharField(max_length=200, blank=True)
+    wilaya_code = models.CharField(max_length=100, blank=True)
+    location_site = models.CharField(max_length=200, blank=True)
+    reference_no = models.CharField(max_length=100, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     vat_rate = models.DecimalField(max_digits=5, decimal_places=2, default=5.00)
 
