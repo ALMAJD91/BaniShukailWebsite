@@ -15,11 +15,47 @@
                 </div>
             </div>
             <div class="toolbar-right">
+                <button class="btn-secondary" onclick="window.print()">🖨 Print List</button>
                 {% if user.is_admin %}
                 <a class="btn-primary" href="{% url 'warehouse:add' %}">+ Add Item</a>
                 {% endif %}
             </div>
         </div>
+
+        <style>
+            @media print {
+                body * {
+                    visibility: hidden;
+                }
+
+                .panel-body,
+                .panel-body * {
+                    visibility: visible;
+                }
+
+                .panel-body {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    background: white;
+                    padding: 0;
+                }
+
+                .toolbar,
+                .btn-secondary,
+                .btn-primary,
+                .btn-danger,
+                .no-print {
+                    display: none !important;
+                }
+
+                /* Ensure table fits */
+                .data-table {
+                    width: 100%;
+                }
+            }
+        </style>
 
         <div class="table-wrapper">
             <table class="data-table" id="warehouseItemsTable">
@@ -43,7 +79,8 @@
                         <td>{{ it.name }}</td>
                         <td>{{ it.unit_label }}</td>
                         <td>{{ it.price }}</td>
-                        <td style="font-weight: bold; {% if it.stock_qty < 10 %}color: #dc2626;{% endif %}">{{ it.stock_qty }}</td>
+                        <td style="font-weight: bold; {% if it.stock_qty < 10 %}color: #dc2626;{% endif %}">{{
+                            it.stock_qty }}</td>
                         <td>{{ it.get_item_type_display }}</td>
                         {% if user.is_admin %}
                         <td>
